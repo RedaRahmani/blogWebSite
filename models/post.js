@@ -16,4 +16,9 @@ const writeData = (data) => {
     fs.writeFileSync(dataPath, stringify(data , null , 2))
 }
 
+module.exports ={
+    readData,
+    getAllPosts,
+    writeData
+}
 
