@@ -49,6 +49,33 @@
   {
     "id": "967eb132-c556-4d91-b26b-325b950f90dd",
     "email": "faaff@example.com",
-    "password": "$2b$10$mLzhWS0TJjNn/bZEhSLdSOv7xXomrClI3ExjoE4HRqVp40rPML3E."
+    "password": "$2b$10$mLzhWS0TJjNn/bZEhSLdSOv7xXomrClI3ExjoE4HRqVp40rPML3E.",
+    "firstname": "",
+    "lastname": "",
+    "gender": ""
+  },
+  {
+    "id": "2bfa8a64-4226-4cf1-bbf4-a6760a4ba335",
+    "email": "fatima@example.com",
+    "password": "$2b$10$ug09ObrYix.ZWZitoHWgQenM.un9ywHsQcETd1XGpFAf5nNv9UpJG",
+    "firstname": "",
+    "lastname": "",
+    "gender": ""
+  },
+  {
+    "id": "4d759a56-03c6-49a3-864d-f88362ad2f20",
+    "email": "fatimaa@example.com",
+    "password": "$2b$10$Gi/IQsQtgNYn2opiB2ni.u7HkHymisrOsx7/e4uXge/7ZlAp/NwkW",
+    "gender": "female",
+    "firstname": "",
+    "lastname": ""
+  },
+  {
+    "id": "faab836c-e4dc-4144-aa72-b2d9f26bcbe9",
+    "email": "fatimaaa@example.com",
+    "password": "$2b$10$TgPx12LwaWJZUZFAdtwTg.WCHhRvskUqyxZ/4q0MpS3MWUU0MR4wu",
+    "firstname": "fatima",
+    "lastname": "fff",
+    "gender": "female"
   }
 ]
