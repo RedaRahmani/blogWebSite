@@ -16,6 +16,8 @@ const writeData = (data) => {
     fs.writeFileSync(dataPath, stringify(data , null , 2))
 }
 
+
+console.log(readData());
 module.exports ={
     readData,
     getAllPosts,
