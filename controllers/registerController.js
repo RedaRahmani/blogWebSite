@@ -1,80 +1,32 @@
-const express = require('express');
+const usersDB = {
+    users: require('../model/users.json'),
+    setUsers: function (data) { this.users = data }
+}
+const fsPromises = require('fs').promises;
+const path = require('path');
 const bcrypt = require('bcrypt');
-const { v4: uuidv4 } = require('uuid');
-const fs = require('fs').promises;
 
-const app = express();
-app.use(express.json());
-
-const USERS_FILE_PATH = 'users.json';
-
-app.post('/register', async (req, res) => {
+const handleNewUser = async (req, res) => {
+    const { user, pwd } = req.body;
+    if (!user || !pwd) return res.status(400).json({ 'message': 'Username and password are required.' });
+    // check for duplicate usernames in the db
+    const duplicate = usersDB.users.find(person => person.username === user);
+    if (duplicate) return res.sendStatus(409); //Conflict 
     try {
-        const { email, password, firstname, lastname, gender } = req.body;
-
-        let users = await readUsersFromFile(USERS_FILE_PATH);
-
-        const findUser = users.find((data) => email === data.email);
-        if (findUser) {
-            return res.status(400).send("Email already exists!");
-        }
-
-        // Hash du mot de passe
-        const hashedPassword = await bcrypt.hash(password, 10);
-
-        // Génération d'un ID avec uuid
-        const userId = uuidv4();
-
-        // Ajout de l'utilisateur à la liste
-        const newUser = {
-            id: userId,
-            email,
-            password: hashedPassword,
-            firstname,
-            lastname,
-            gender
-        };
-
-        // Ajouter les champs manquants pour les utilisateurs existants
-        users = users.map(user => ({
-            ...user,
-            firstname: user.firstname || '',
-            lastname: user.lastname || '',
-            gender: user.gender || ''
-        }));
-
-        users.push(newUser);
-
-        // Écrire les utilisateurs mis à jour dans le fichier
-        await writeUsersToFile(users);
-
-        // Réponse avec l'ID généré et les informations de l'utilisateur
-        res.status(201).json(newUser);
+        //encrypt the password
+        const hashedPwd = await bcrypt.hash(pwd, 10);
+        //store the new user
+        const newUser = { "username": user, "password": hashedPwd };
+        usersDB.setUsers([...usersDB.users, newUser]);
+        await fsPromises.writeFile(
+            path.join(__dirname, '..', 'model', 'users.json'),
+            JSON.stringify(usersDB.users)
+        );
+        console.log(usersDB.users);
+        res.status(201).json({ 'success': `New user ${user} created!` });
     } catch (err) {
-        res.status(500).send({ message: err.message });
-    }
-});
-
-
-// Fonction pour lire les utilisateurs depuis le fichier
-async function readUsersFromFile(filePath) {
-    try {
-        const data = await fs.readFile(filePath, 'utf8');
-        return JSON.parse(data) || [];
-    } catch (error) {
-        return [];
+        res.status(500).json({ 'message': err.message });
     }
 }
 
-// Fonction pour écrire les utilisateurs dans le fichier
-async function writeUsersToFile(users) {
-    const data = JSON.stringify(users, null, 2);
-    await fs.writeFile(USERS_FILE_PATH, data, 'utf8');
-}
-
-const PORT = 3000;
-app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
-});
-
-
+module.exports = { handleNewUser };
